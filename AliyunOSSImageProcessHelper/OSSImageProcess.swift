@@ -9,7 +9,7 @@
 import UIKit
 
 open class OSSImageProcess {
-
+    
     var url: String
     public init(url: String){
         self.url = url
@@ -37,9 +37,9 @@ open class OSSImageProcess {
     /// 将图片按照要求生成缩略图，或者进行特定的缩放,图片处理支持的格式：jpg、png、bmp、gif、webp、tiff
     ///
     /// - Parameters:
-    ///   - width: 宽度,1-4096
-    ///   - height: 高度,1-4096
-    ///   - mode: 缩略的模式
+    ///   - width: 宽度,会乘以screen scale,1-4096
+    ///   - height: 高度,会乘以screen scale,1-4096
+    ///   - mode: 缩略的模式，默认为lfit
     ///   - limit: 当目标缩略图大于原图时是否处理。值是 1 表示不处理；值是 0 表示处理。默认是 1
     ///   - color: 填充的颜色(默认是白色),采用16进制颜色码表示，如00FF00（绿色）
     public func resize(width: Int? = nil, height: Int? = nil, mode: Mode? = nil, limit: String? = nil, color: String? = nil) -> OSSImageProcess {
@@ -136,11 +136,12 @@ class ResizeAction: ImageProcessAction {
         if let mode = mode {
             parameters.append("m_\(mode.rawValue)")
         }
+        let screenScale = Int(UIScreen.main.scale)
         if let width = width {
-            parameters.append("w_\(width)")
+            parameters.append("w_\(width*screenScale)")
         }
         if let height = height {
-            parameters.append("h_\(height)")
+            parameters.append("h_\(height*screenScale)")
         }
         if let limit = limit {
             parameters.append("limit_\(limit)")
